@@ -1,0 +1,17 @@
+:root { color: #172033; font-family: Arial, sans-serif; }
+body { margin: 0; width: 430px; background: #f8fafc; }
+main { padding: 16px; }
+header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+h1 { margin: 0; font-size: 18px; }
+#status { margin: 10px 0 14px; color: #536075; font-size: 13px; line-height: 1.45; }
+#video-list { display: grid; gap: 8px; max-height: 480px; overflow-y: auto; }
+.video-row { display: grid; gap: 10px; padding: 12px; background: #fff; border: 1px solid #dbe2ec; border-radius: 8px; }
+.video-info { min-width: 0; flex: 1; display: grid; gap: 5px; }
+.video-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; }
+.video-link { overflow: hidden; color: #2664cc; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.copy-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+button { border: 0; border-radius: 6px; background: #1769e0; color: #fff; cursor: pointer; font-weight: 600; }
+.copy-button { min-height: 34px; padding: 8px 10px; }
+.copy-button:hover, .copy-button:focus { background: #1057bd; }
+.copy-button.copied { background: #168052; }
+.icon-button { width: 30px; height: 30px; font-size: 20px; }

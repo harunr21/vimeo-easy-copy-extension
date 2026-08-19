@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vimeo Kolay Kopyalama</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Vimeo videoları</h1>
+        <button id="refresh" class="icon-button" title="Listeyi yenile" aria-label="Listeyi yenile">↻</button>
+      </header>
+      <p id="status" role="status">Vimeo sayfası okunuyor…</p>
+      <section id="video-list" aria-live="polite"></section>
+      <template id="video-template">
+        <article class="video-row">
+          <div class="video-info">
+            <strong class="video-title"></strong>
+            <a class="video-link" target="_blank" rel="noreferrer"></a>
+          </div>
+          <div class="copy-actions">
+            <button class="copy-button copy-title-button">İsmi kopyala</button>
+            <button class="copy-button copy-link-button">Linki kopyala</button>
+          </div>
+        </article>
+      </template>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>
