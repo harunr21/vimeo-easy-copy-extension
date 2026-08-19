@@ -10,7 +10,10 @@
     <main>
       <header>
         <h1>Vimeo videoları</h1>
-        <button id="refresh" class="icon-button" title="Listeyi yenile" aria-label="Listeyi yenile">↻</button>
+        <div class="header-actions">
+          <button id="pin" class="pin-button" aria-pressed="false">Listeyi sabitle</button>
+          <button id="refresh" class="icon-button" title="Vimeo listesini yenile" aria-label="Vimeo listesini yenile">↻</button>
+        </div>
       </header>
       <p id="status" role="status">Vimeo sayfası okunuyor…</p>
       <section id="video-list" aria-live="polite"></section>

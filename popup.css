@@ -1,8 +1,9 @@
 :root { color: #172033; font-family: Arial, sans-serif; }
-body { margin: 0; width: 430px; background: #f8fafc; }
+body { margin: 0; background: #f8fafc; }
 main { padding: 16px; }
 header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 h1 { margin: 0; font-size: 18px; }
+.header-actions { display: flex; align-items: center; gap: 6px; }
 #status { margin: 10px 0 14px; color: #536075; font-size: 13px; line-height: 1.45; }
 #video-list { display: grid; gap: 8px; max-height: 480px; overflow-y: auto; }
 .video-row { display: grid; gap: 10px; padding: 12px; background: #fff; border: 1px solid #dbe2ec; border-radius: 8px; }
@@ -14,4 +15,7 @@ button { border: 0; border-radius: 6px; background: #1769e0; color: #fff; cursor
 .copy-button { min-height: 34px; padding: 8px 10px; }
 .copy-button:hover, .copy-button:focus { background: #1057bd; }
 .copy-button.copied { background: #168052; }
+.pin-button { padding: 8px 10px; background: #475569; font-size: 12px; }
+.pin-button:hover, .pin-button:focus { background: #334155; }
+.pin-button.is-pinned { background: #8b3fd1; }
 .icon-button { width: 30px; height: 30px; font-size: 20px; }

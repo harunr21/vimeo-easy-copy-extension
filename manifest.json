@@ -3,11 +3,16 @@
   "name": "Vimeo Kolay Kopyalama",
   "version": "0.1.0",
   "description": "Vimeo klasörlerindeki video adlarını ve bağlantılarını tek tıkla kopyalar.",
-  "permissions": ["clipboardWrite"],
+  "permissions": ["clipboardWrite", "sidePanel", "storage"],
   "host_permissions": ["https://vimeo.com/*", "https://*.vimeo.com/*"],
   "action": {
-    "default_title": "Vimeo videolarını kopyala",
-    "default_popup": "popup.html"
+    "default_title": "Vimeo videolarını kopyala"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "popup.html"
   },
   "content_scripts": [
     {
