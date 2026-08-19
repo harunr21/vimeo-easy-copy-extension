@@ -6,7 +6,9 @@ h1 { margin: 0; font-size: 18px; }
 .header-actions { display: flex; align-items: center; gap: 6px; }
 #status { margin: 10px 0 14px; color: #536075; font-size: 13px; line-height: 1.45; }
 #video-list { display: grid; gap: 8px; max-height: 480px; overflow-y: auto; }
-.video-row { display: grid; gap: 10px; padding: 12px; background: #fff; border: 1px solid #dbe2ec; border-radius: 8px; }
+.video-row { display: grid; gap: 10px; padding: 12px; background: #fff; border: 1px solid #dbe2ec; border-radius: 8px; transition: background-color 160ms ease, border-color 160ms ease; }
+.video-row.copy-partial { background: #fff8d6; border-color: #edc747; }
+.video-row.copy-complete { background: #e8f7ed; border-color: #4aa56b; }
 .video-info { min-width: 0; flex: 1; display: grid; gap: 5px; }
 .video-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; }
 .video-link { overflow: hidden; color: #2664cc; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }

@@ -17,6 +17,7 @@ function renderVideos(videos) {
 
   for (const video of videos) {
     const row = template.content.cloneNode(true);
+    const card = row.querySelector('.video-row');
     const title = row.querySelector('.video-title');
     const link = row.querySelector('.video-link');
     const titleButton = row.querySelector('.copy-title-button');
@@ -25,8 +26,17 @@ function renderVideos(videos) {
     title.textContent = video.title;
     link.textContent = video.url;
     link.href = video.url;
-    addCopyAction(titleButton, video.title, 'İsim kopyalandı', 'İsmi kopyala');
-    addCopyAction(linkButton, video.url, 'Link kopyalandı', 'Linki kopyala');
+    updateCardState(card, video);
+    addCopyAction(titleButton, video.title, 'İsim kopyalandı', 'İsmi kopyala', async () => {
+      video.copiedTitle = true;
+      updateCardState(card, video);
+      await saveCopyProgress();
+    });
+    addCopyAction(linkButton, video.url, 'Link kopyalandı', 'Linki kopyala', async () => {
+      video.copiedLink = true;
+      updateCardState(card, video);
+      await saveCopyProgress();
+    });
 
     listElement.append(row);
   }
@@ -38,9 +48,23 @@ function updatePinButton() {
   pinButton.setAttribute('aria-pressed', String(isPinned));
 }
 
-function addCopyAction(button, value, copiedLabel, defaultLabel) {
+function updateCardState(card, video) {
+  const isComplete = video.copiedTitle && video.copiedLink;
+  const isPartial = video.copiedTitle || video.copiedLink;
+  card.classList.toggle('copy-partial', isPartial && !isComplete);
+  card.classList.toggle('copy-complete', isComplete);
+}
+
+async function saveCopyProgress() {
+  if (isPinned) {
+    await chrome.storage.local.set({ [PINNED_VIDEOS_KEY]: displayedVideos });
+  }
+}
+
+function addCopyAction(button, value, copiedLabel, defaultLabel, afterCopy) {
   button.addEventListener('click', async () => {
     await navigator.clipboard.writeText(value);
+    await afterCopy();
     button.textContent = copiedLabel;
     button.classList.add('copied');
     setTimeout(() => {
@@ -48,6 +72,17 @@ function addCopyAction(button, value, copiedLabel, defaultLabel) {
       button.classList.remove('copied');
     }, 1400);
   });
+}
+
+function preserveCopyProgress(videos) {
+  const previousStateByUrl = new Map(
+    displayedVideos.map((video) => [video.url, {
+      copiedTitle: Boolean(video.copiedTitle),
+      copiedLink: Boolean(video.copiedLink)
+    }])
+  );
+
+  return videos.map((video) => ({ ...video, ...previousStateByUrl.get(video.url) }));
 }
 
 async function captureVideosFromActiveTab() {
@@ -100,7 +135,7 @@ async function loadVideos({ refreshPinnedList = false } = {}) {
     return;
   }
 
-  displayedVideos = videos;
+  displayedVideos = isPinned ? preserveCopyProgress(videos) : videos;
   renderVideos(displayedVideos);
   if (pinnedVideos?.length) {
     isPinned = true;
