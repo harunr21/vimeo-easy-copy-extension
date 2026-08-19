@@ -56,9 +56,21 @@ function updateCardState(card, video) {
 }
 
 async function saveCopyProgress() {
-  if (isPinned) {
-    await chrome.storage.local.set({ [PINNED_VIDEOS_KEY]: displayedVideos });
-  }
+  // Kopyalama rengi yalnızca açık panel oturumunda takip edilir.
+  // Sabit liste yeniden açıldığında videoların beyaz başlaması gerekir.
+}
+
+function createPinnedSnapshot(videos) {
+  return videos.map(({ title, url }) => ({ title, url }));
+}
+
+function createFreshVideoList(videos) {
+  return videos.map(({ title, url }) => ({
+    title,
+    url,
+    copiedTitle: false,
+    copiedLink: false
+  }));
 }
 
 function addCopyAction(button, value, copiedLabel, defaultLabel, afterCopy) {
@@ -100,7 +112,8 @@ async function captureVideosFromActiveTab() {
 }
 
 async function loadVideos({ refreshPinnedList = false } = {}) {
-  const { [PINNED_VIDEOS_KEY]: pinnedVideos } = await chrome.storage.local.get(PINNED_VIDEOS_KEY);
+  const { [PINNED_VIDEOS_KEY]: storedPinnedVideos } = await chrome.storage.local.get(PINNED_VIDEOS_KEY);
+  const pinnedVideos = storedPinnedVideos ? createPinnedSnapshot(storedPinnedVideos) : null;
 
   if (pinnedVideos?.length && !refreshPinnedList) {
     isPinned = true;
@@ -135,14 +148,16 @@ async function loadVideos({ refreshPinnedList = false } = {}) {
     return;
   }
 
-  displayedVideos = isPinned ? preserveCopyProgress(videos) : videos;
-  renderVideos(displayedVideos);
   if (pinnedVideos?.length) {
     isPinned = true;
-    await chrome.storage.local.set({ [PINNED_VIDEOS_KEY]: displayedVideos });
+    displayedVideos = preserveCopyProgress(videos);
+    renderVideos(displayedVideos);
+    await chrome.storage.local.set({ [PINNED_VIDEOS_KEY]: createPinnedSnapshot(displayedVideos) });
     setStatus(`${displayedVideos.length} videoluk sabit liste Vimeo’daki bilgilerle güncellendi.`);
   } else {
     isPinned = false;
+    displayedVideos = createFreshVideoList(videos);
+    renderVideos(displayedVideos);
     setStatus(`${displayedVideos.length} video bulundu. İsim ve linki ayrı ayrı kopyalayabilirsiniz.`);
   }
   updatePinButton();
@@ -162,7 +177,7 @@ pinButton.addEventListener('click', async () => {
     return;
   }
 
-  await chrome.storage.local.set({ [PINNED_VIDEOS_KEY]: displayedVideos });
+  await chrome.storage.local.set({ [PINNED_VIDEOS_KEY]: createPinnedSnapshot(displayedVideos) });
   isPinned = true;
   updatePinButton();
   setStatus(`${displayedVideos.length} video sabitlendi. Liste başka sekmelere geçince de açık kalır.`);
